@@ -14,7 +14,7 @@ import googlemaps
 from datetime import datetime
 
 
-API_KEY= 'AIzaSyB7U8FvcC4gek4YEmtuXzv-ZWuhH8HAguk'
+API_KEY= 'XXXXXX' # Enter your API Key here for goole route
 get_driver_list_api = 'https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/get_driver'
 delete_driver_api = 'https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/delete_driver'
 notification_api = 'https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/DriverNotification'
