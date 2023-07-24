@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Pooling Website</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <form id="register-form">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+
+      <label for="user-type">User Type:</label>
+      <select id="user-type" name="user-type" onchange="toggleCarFields()">
+        <option value="rider">Rider</option>
+        <option value="driver">Driver</option>
+      </select><br><br>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required><br><br>
+
+      <label for="mobile-number">Mobile Number:</label>
+      <input type="tel" id="mobile-number" name="mobile-number" required><br><br>
+
+      <div id="car-fields" style="display:none;">
+        <label for="car-brand">Car Brand:</label>
+        <input type="text" id="car-brand" name="car-brand"><br><br>
+
+        <label for="car-number">Car Number:</label>
+        <input type="text" id="car-number" name="car-number"><br><br>
+      </div>
+
+      <input type="submit" value="Register">
+    </form>
+
+    <script>
+      function toggleCarFields() {
+        var user_type = document.getElementById("user-type").value;
+        var car_fields = document.getElementById("car-fields");
+
+        if (user_type == "driver") {
+          car_fields.style.display = "block";
+        } else {
+          car_fields.style.display = "none";
+        }
+      }
+
+      document.getElementById("register-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var form = event.target;
+        var data = {
+          username: form.elements["username"].value,
+          password: form.elements["password"].value,
+          user_type: form.elements["user-type"].value,
+          email: form.elements["email"].value,
+          mobile_number: form.elements["mobile-number"].value,
+        };
+        if (data.user_type == "driver") {
+          data.car_brand = form.elements["car-brand"].value;
+          data.car_number = form.elements["car-number"].value;
+        }
+        var requestParams = {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        fetch("https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/register", requestParams)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(json => {
+          console.log("API response:", json);
+          window.location.href = 'login.html';
+          // show success message to user
+        })
+        .catch(error => {
+          console.error("API error:", error);
+          // show error message to user
+        });
+      });
+    </script>
+  </body>
+</html>

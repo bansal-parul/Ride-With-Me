@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Pooling Website</title>
+    <style>
+        header {
+          display: flex;
+          justify-content: flex-end;
+        }
+        header a {
+          margin-left: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </header>
+    <h1>Add Driver</h1>
+    <form id="add-driver-form">
+      <label for="departure">Departure:</label>
+      <input type="text" id="departure" name="departure"><br>
+
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination"><br>
+
+      <label for="start_time">Start Time:</label>
+      <input type="datetime-local" id="start_time" name="start_time"><br>
+
+      <label for="end_time">End Time:</label>
+      <input type="datetime-local" id="end_time" name="end_time"><br>
+
+      <input type="submit" value="Add Driver">
+    </form>
+
+    <script>
+
+      document.getElementById("add-driver-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var form = event.target;
+        var start_time = form.elements["start_time"].value;
+        var end_time = form.elements["end_time"].value;
+        var data = {
+          departure: form.elements["departure"].value,
+          destination: form.elements["destination"].value,
+          start_time: Date.parse(start_time) / 1000,
+          end_time: Date.parse(end_time) / 1000,
+          username: JSON.parse(getCookie('userInfo')).username
+        };
+        var requestParams = {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        fetch("https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/add_driver", requestParams)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(json => {
+          console.log("API response:", json);
+          // show success message to user
+        })
+        .catch(error => {
+          console.error("API error:", error);
+          // show error message to user
+        });
+      });
+
+      // Helper function to get cookie value by name
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) 
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+      }
+
+      function logout() {
+        // Get all cookies
+        var cookies = document.cookie.split(";");
+
+        // Delete each cookie by setting its expiration date to the past
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        // Redirect the user to the login page
+        window.location.href = "login.html";
+      }
+
+    </script>
+  </body>
+</html>

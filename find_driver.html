@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Pooling Website</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        header {
+          display: flex;
+          justify-content: flex-end;
+        }
+        header a {
+          margin-left: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </header>
+    <h1>Find a Driver</h1>
+
+    <!-- Departure and destination fields -->
+    <label for="departure">Departure:</label>
+    <input type="text" id="departure" name="departure"><br>
+
+    <label for="destination">Destination:</label>
+    <input type="text" id="destination" name="destination"><br>
+
+    <label for="start_time">Pick up time:</label>
+    <input type="datetime-local" id="start_time" name="start_time"><br>
+
+    <!-- Find driver button -->
+    <button onclick="findDriver()">Find Driver</button>
+
+    <!-- Driver information container -->
+    <div id="driver-info"></div>
+
+    <script>
+      function findDriver() {
+        // Get departure and destination values
+        var departure = $("#departure").val();
+        console.log('departure')
+        var destination = $("#destination").val();
+        var start_time = Date.parse($("#start_time").val()) / 1000;
+        var username = JSON.parse(getCookie('userInfo')).username;
+
+        // Call external API to find driver
+        $.ajax({
+          type: "POST",
+          url: "https://7y4c2hpftd.execute-api.us-east-1.amazonaws.com/dev/matching_algo",
+          data: { start: departure, destination: destination, start_time: start_time,  username: username},
+          success: function(data) {
+            // Display driver information
+            var driverInfo = "<h2>Driver Information</h2>";
+            driverInfo += "<p>Car Brand: " + data.car_brand + "</p>";
+            driverInfo += "<p>Car Number: " + data.car_number + "</p>";
+            $("#driver-info").html(driverInfo);
+          },
+          error: function() {
+            // Display error message
+            var errorMessage = "<h2>Error</h2>";
+            errorMessage += "<p>Failed to find driver.</p>";
+            $("#driver-info").html(errorMessage);
+          }
+        });
+      }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) 
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+      }
+
+
+      function logout() {
+        // Get all cookies
+        var cookies = document.cookie.split(";");
+
+        // Delete each cookie by setting its expiration date to the past
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        // Redirect the user to the login page
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Pooling Website</title>
+    <style>
+        header {
+          display: flex;
+          justify-content: flex-end;
+        }
+        header a {
+          margin-left: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </header>
+    <h1>User Profile</h1>
+    <p>Welcome to your profile page!</p>
+    
+    <script>
+      function logout() {
+        // Get all cookies
+        var cookies = document.cookie.split(";");
+
+        // Delete each cookie by setting its expiration date to the past
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        // Redirect the user to the login page
+        window.location.href = "login.html";
+      }
+
+      
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) 
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+      }
+      let userInfo = JSON.parse(getCookie('userInfo'));
+
+      const username = userInfo.username;
+      const email = userInfo.email;
+      const mobile_number = userInfo.mobile_number;
+      const user_type = userInfo.user_type
+      document.write(`<h2>${username}</h2>`);
+      document.write(`<p>Email: ${email}</p>`);
+      document.write(`<p>Mobile Number: ${mobile_number}</p>`);
+      if (user_type === 'driver') {
+        const car_brand = userInfo.car_brand;
+        const car_number = userInfo.car_number;
+        document.write(`<p>Car Brand: ${car_brand}</p>`);
+        document.write(`<p>Car Number: ${car_number}</p>`);
+      }
+
+
+    </script>
+  </body>
+</html>
+

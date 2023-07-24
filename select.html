@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Car Pooling Website</title>
+    <style>
+        header {
+          display: flex;
+          justify-content: flex-end;
+        }
+        header a {
+          margin-left: 10px;
+        }
+    </style>
+    <script>
+        function logout() {
+        // Get all cookies
+        var cookies = document.cookie.split(";");
+
+        // Delete each cookie by setting its expiration date to the past
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        // Redirect the user to the login page
+        window.location.href = "login.html";
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </header>
+    <h1>Driver Management System</h1>
+    <p>Select an option below:</p>
+    <button onclick="window.location.href='add_driver.html'">Add Driver</button>
+    <button onclick="window.location.href='find_driver.html'">Find Driver</button>
+  </body>
+</html>
